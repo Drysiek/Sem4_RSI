@@ -1,0 +1,14 @@
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.AssemblyReference.cache
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\RSI_lista2.dll
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\RSI_lista2.pdb
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\RSI_lista2.dll.config
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CopyComplete
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\WcfServiceLibrary2.dll
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\WcfServiceLibrary2.pdb
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\ConsoleApp1\ConsoleApp1\bin\Debug\WcfServiceLibrary2.dll.config

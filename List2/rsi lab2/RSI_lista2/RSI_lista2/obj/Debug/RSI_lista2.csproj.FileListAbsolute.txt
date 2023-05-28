@@ -1,0 +1,7 @@
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\bin\Debug\RSI_lista2.dll.config
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\bin\Debug\RSI_lista2.dll
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\bin\Debug\RSI_lista2.pdb
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\obj\Debug\RSI_lista2.csproj.AssemblyReference.cache
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\obj\Debug\RSI_lista2.csproj.CoreCompileInputs.cache
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\obj\Debug\RSI_lista2.dll
+C:\Users\505ry\OneDrive\Pulpit\rsi lab2\RSI_lista2\RSI_lista2\obj\Debug\RSI_lista2.pdb

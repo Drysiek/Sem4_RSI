@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie managment site</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table, td, th {
+            /*border: 1px solid;*/
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        body{
+            background-color: #b4b4b4;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+    <script>
+        var myUrl = "http://localhost:8080/movies"
+        var Movie = {
+            "id" : 0,
+            "name" : "",
+            "genre" : null,
+            "rating" : 0,
+            "inCinema" : false
+        }
+        const Genre = {
+            Horror: "Horror",
+            Fantasy: "Fantasy",
+            Romance: "Romance"
+        }
+
+        $(document).ready(function() {
+            getAllMovies();
+        });
+        function getAllMovies() {
+            $.ajax({
+                type: "GET",
+                url: myUrl,
+                dataType: "json",
+            })
+                .done(function(response) {
+                    console.log(response)
+                    showMovieList(response._embedded.movieList);
+                })
+                .fail(function(errMsg) {
+                    alert(JSON.stringify(errMsg));
+                });
+        }
+        function showMovieList(movieList) {
+            let movieTableData = "";
+            let newRow = "";
+
+            var myTable = document.getElementById("presentationTable");
+            var rows = myTable.getElementsByTagName("tr");
+
+            for (var i = rows.length - 1; i > 0; i--) {
+                myTable.removeChild(rows[i]);
+            }
+
+            movieList.forEach(movie => {
+                newRow = document.createElement("tr");
+                let buttons = '';
+                console.log(movie.id);
+                let editButton = document.createElement("td");
+                editButton.innerHTML = '<button class="yellow">edit</button>';
+                editButton.onclick = function () {
+                    onEdit(movie);
+                };
+
+                // buttons += `<td><button class="red" onclick="onDelete(${movie.id})" disabled=movie.inCinema>delete movie</button></td>`;
+                buttons += `<td><button class="blue" onclick="prepareEdit(${movie.id})">prepare to edit</button></td>`;
+                if(!movie.inCinema){
+                    buttons += `<td><button class="red" onclick="onDelete(${movie.id})" disabled>delete movie</button></td>`;
+                    buttons += `<td><button class="yellow" onclick="onActivate(${movie.id})">activate movie</button></td>`;
+                }
+                else{
+                    buttons += `<td><button class="red" onclick="onDelete(${movie.id})">delete movie</button></td>`;
+                    buttons += `<td><button class="yellow" onclick="onDeactivate(${movie.id})">deactivate movie</button></td>`;
+                }
+
+                movieTableData =
+                    `<td>${movie.id}</td>` +
+                    `<td>${movie.name}</td>` +
+                    `<td>${movie.rating}</td>` +
+                    // `<td>${movie.inCinema}</td>` +
+                    `<td>${movie.genre}</td>` +
+                    buttons;
+
+                newRow.innerHTML = movieTableData;
+                myTable.appendChild(newRow);
+            });
+        }
+
+
+        function onDelete(id) {
+            $.ajax( {
+                type: "DELETE",
+                url: myUrl + "/" + id,
+                dataType: "json",
+            })
+                .done(function(msg) {
+                    getAllMovies();
+                })
+                .fail(function(errMsg) {
+                    alert(JSON.stringify(errMsg));
+                });
+        }
+
+        function onDeactivate(id) {
+            $.ajax( {
+                type: "PUT",
+                url: myUrl + "/" + id + "/deactivate",
+                dataType: "json",
+            })
+                .done(function(msg) {
+                    getAllMovies();
+                })
+                .fail(function(errMsg) {
+                    alert(JSON.stringify(errMsg));
+                });
+        }
+
+        function onActivate(id) {
+            console.log("activate" + id)
+            $.ajax( {
+                type: "PUT",
+                url: myUrl + "/" + id + "/activate",
+                dataType: "json",
+            })
+                .done(function(msg) {
+                    getAllMovies();
+                })
+                .fail(function(errMsg) {
+                    alert(JSON.stringify(errMsg));
+                });
+        }
+
+        function addMovie(){
+            const IdInput = document.getElementById("id")
+            const nameInput = document.getElementById("name")
+            const ratingInput = document.getElementById("rating")
+            const inCinemaInput = document.getElementById("inCinema")
+            const genreInput = document.getElementById("genre")
+
+            var movie = Movie;
+
+            movie.id = IdInput.value;
+            movie.name = nameInput.value;
+            movie.rating = ratingInput.value;
+            movie.inCinema = inCinemaInput.checked;
+            movie.genre = genreInput.value;
+
+            if(movie.id != "" && movie.name !="" && movie.rating != "") {
+                $.ajax( {
+                    type: "POST",
+                    url: myUrl,
+                    data: JSON.stringify(movie),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                    .done(function(msg) {
+                        getAllMovies();
+                    })
+                    .fail(function(errMsg) {
+                        alert(JSON.stringify(errMsg));
+                    });
+            }
+            else {
+                alert("Wypełnij wszystkie dane!")
+            }
+        }
+
+        function prepareEdit(id){
+            var movie = Movie
+            $.ajax({
+                type: "GET",
+                url: myUrl + "/" + id,
+                dataType: "json",
+            })
+                .done(function(response) {
+                    console.log(response)
+                    movie.id = response.id
+                    movie.name = response.name
+                    movie.rating = response.rating
+                    movie.genre = response.genre
+                    movie.inCinema = response.inCinema
+                    console.log(movie)
+
+                    document.getElementById("id").value = id
+                    document.getElementById("name").value = movie.name
+                    document.getElementById("rating").value = movie.rating
+                    document.getElementById("inCinema").checked = movie.inCinema
+                    document.getElementById("genre").value = movie.genre
+                    document.getElementById("id").disabled = true
+                    document.getElementById("add").disabled = true
+                    document.getElementById("edit").disabled = false
+                })
+                .fail(function(errMsg) {
+                    alert(JSON.stringify(errMsg));
+                });
+        }
+
+        function editMovie(){
+            const IdInput = document.getElementById("id").value
+
+            console.log(IdInput)
+            const nameInput = document.getElementById("name")
+            const ratingInput = document.getElementById("rating")
+            const inCinemaInput = document.getElementById("inCinema")
+            const genreInput = document.getElementById("genre")
+
+            var movie = Movie;
+
+            movie.id = IdInput.value;
+            if(nameInput != "") {
+                movie.name = nameInput.value;
+            }
+            if(ratingInput != "") {
+                movie.rating = ratingInput.value;
+            }
+            movie.inCinema = inCinemaInput.checked;
+            movie.genre = genreInput.value;
+
+            $.ajax( {
+                type: "PUT",
+                url: myUrl + "/" + IdInput,
+                data: JSON.stringify(movie),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            })
+                .done(function(msg) {
+                    getAllMovies();
+                })
+                .fail(function(errMsg) {
+                    alert(JSON.stringify(errMsg));
+                });
+            discard()
+        }
+
+        function discard(){
+            document.getElementById("id").value = ""
+            document.getElementById("name").value = ""
+            document.getElementById("rating").value = ""
+            document.getElementById("inCinema").checked = false
+            // document.getElementById("genre").value = ""
+            document.getElementById("add").disabled = false
+            document.getElementById("edit").disabled = true
+        }
+
+    </script>
+
+    <div style="margin-left: 200px;margin-right: 200px;margin-top: 50px;">
+        <table id="presentationTable">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Rating</th>
+<!--                <th>inCinema</th>-->
+                <th>Genre</th>
+                <th colspan=3>Actions</th>
+            </tr>
+        </table>
+    </div>
+
+    <div style="margin-top: 50px;position: absolute; top: 50%; left: 50%;
+    -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
+        <h1 style="margin-top: 50px;">Add Movie</h1>
+
+        <label for="id">ID</label>
+        <input id="id" type="number">
+        <br><br>
+
+        <label for="name">Name</label>
+        <input id="name" type="text">
+        <br><br>
+
+        <label for="rating">Rating</label>
+        <input id="rating" type="number", step="0.1">
+        <br><br>
+
+        <label for="inCinema">inCinema</label>
+        <input style="transform: scale(1.5);" id="inCinema" type="checkbox">
+        <br><br>
+
+        <label for="genre">Genre</label>
+        <select id="genre" style="transform: scale(1.2); margin-bottom: 50px; margin-left: 25px;">
+            <option value="Horror">Horror</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Romance">Romance</option>
+        </select>
+
+        <button style="display: block; width: 216px;" type="button" id="add" onclick="addMovie()">Add</button>
+        <button style="display: block; width: 216px;" type="button" id="edit" disabled=true onclick="editMovie()">Edit</button>
+        <button style="display: block; width: 216px;" type="button" id="discard" onclick="discard()">Discard</button>
+    </div>
+
+
+</body>
+</html>
