@@ -2,6 +2,7 @@ package com.example.zad4p2;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,11 +21,13 @@ public class MovieController {
     @GetMapping("/movies/{id}")
     public EntityModel<?> getMovie(@PathVariable int id) {
         try{
+            Link x = linkTo(methodOn(MovieController.class).activateMovie(id)).withRel("InCinema");
+            if(impl.getMovie(id).isinCinema())
+                x = linkTo(methodOn(MovieController.class).deactivateMovie(id)).withRel("InCinema");
             return EntityModel.of(impl.getMovie(id),
                     linkTo(methodOn(MovieController.class).getMovie(id)).withSelfRel(),
                     linkTo(methodOn(MovieController.class).deleteMovie(id)).withRel("delete"),
-                    linkTo(methodOn(MovieController.class).deactivateMovie(id)).withRel("In  Cinema?"),
-                    linkTo(methodOn(MovieController.class).activateMovie(id)).withRel("In  Cinema?"),
+                    x,
                     linkTo(methodOn(MovieController.class).getMovie()).withRel("list all")
             );
         } catch (MovieNotFoundEx e) {
@@ -46,11 +49,13 @@ public class MovieController {
             }catch (MovieNotFoundEx e) {
                 throw new RuntimeException(e);
             }
+            Link x = linkTo(methodOn(MovieController.class).activateMovie(movie.getId())).withRel("InCinema");
+            if(temp.isinCinema())
+                x = linkTo(methodOn(MovieController.class).deactivateMovie(movie.getId())).withRel("InCinema");
             return EntityModel.of(temp,
                     linkTo(methodOn(MovieController.class).getMovie(movie.getId())).withSelfRel(),
                     linkTo(methodOn(MovieController.class).deleteMovie(movie.getId())).withRel("delete"),
-                    linkTo(methodOn(MovieController.class).deactivateMovie(movie.getId())).withRel("In  Cinema?"),
-                    linkTo(methodOn(MovieController.class).activateMovie(movie.getId())).withRel("In  Cinema?")
+                    x
             );
 
         }).collect(Collectors.toList());
@@ -71,12 +76,14 @@ public class MovieController {
     public EntityModel<?> addMovie(@RequestBody Movie movie){
         try{
             System.out.println("...called POST");
+            Link x = linkTo(methodOn(MovieController.class).activateMovie(movie.getId())).withRel("InCinema");
+            if(impl.getMovie(movie.getId()).isinCinema())
+                x = linkTo(methodOn(MovieController.class).deactivateMovie(movie.getId())).withRel("InCinema");
             return EntityModel.of(impl.addMovie(movie),
                     linkTo(methodOn(MovieController.class).getMovie(movie.getId())).withSelfRel(),
                     linkTo(methodOn(MovieController.class).deleteMovie(movie.getId())).withRel("delete"),
                     linkTo(methodOn(MovieController.class).getMovie()).withRel("list all"),
-                    linkTo(methodOn(MovieController.class).deactivateMovie(movie.getId())).withRel("In  Cinema?"),
-                    linkTo(methodOn(MovieController.class).activateMovie(movie.getId())).withRel("In  Cinema?")
+                    x
             );
         } catch (MovieExistsEx | MovieNotFoundEx e) {
             System.out.println("...POST Exception");
@@ -88,12 +95,14 @@ public class MovieController {
     public EntityModel<?> updateMovie(@PathVariable int id, @RequestBody Movie movie){
         try{
             System.out.println("...called PUT");
+            Link x = linkTo(methodOn(MovieController.class).activateMovie(id)).withRel("InCinema");
+            if(impl.getMovie(id).isinCinema())
+                x = linkTo(methodOn(MovieController.class).deactivateMovie(id)).withRel("InCinema");
             return EntityModel.of(impl.updateMovie(id, movie.getName(), movie.isinCinema(), movie.getRating(), movie.getGenre()),
                     linkTo(methodOn(MovieController.class).getMovie(id)).withSelfRel(),
                     linkTo(methodOn(MovieController.class).deleteMovie(id)).withRel("delete"),
                     linkTo(methodOn(MovieController.class).getMovie()).withRel("list all"),
-                    linkTo(methodOn(MovieController.class).deactivateMovie(id)).withRel("In  Cinema?"),
-                    linkTo(methodOn(MovieController.class).activateMovie(id)).withRel("In  Cinema?")
+                    x
                     );
         } catch (Exception e) {
             System.out.println("...PUT Exception");

@@ -76,15 +76,14 @@
                     onEdit(movie);
                 };
 
-                // buttons += `<td><button class="red" onclick="onDelete(${movie.id})" disabled=movie.inCinema>delete movie</button></td>`;
                 buttons += `<td><button class="blue" onclick="prepareEdit(${movie.id})">prepare to edit</button></td>`;
-                if(!movie.inCinema){
-                    buttons += `<td><button class="red" onclick="onDelete(${movie.id})" disabled>delete movie</button></td>`;
-                    buttons += `<td><button class="yellow" onclick="onActivate(${movie.id})">activate movie</button></td>`;
+                if(movie._links.InCinema.href != 'http://localhost:8080/movies/' + movie.id + '/deactivate'){
+                    buttons += `<td><button class="red" onclick='onDelete("${movie._links.delete.href}")' disabled>delete movie</button></td>`;
+                    buttons += `<td><button class="yellow" onclick='onActivate("${movie._links.InCinema.href}")'>activate movie</button></td>`;
                 }
                 else{
-                    buttons += `<td><button class="red" onclick="onDelete(${movie.id})">delete movie</button></td>`;
-                    buttons += `<td><button class="yellow" onclick="onDeactivate(${movie.id})">deactivate movie</button></td>`;
+                    buttons += `<td><button class="red" onclick='onDelete("${movie._links.delete.href}")'>delete movie</button></td>`;
+                    buttons += `<td><button class="yellow" onclick='onDeactivate("${movie._links.InCinema.href}")'>deactivate movie</button></td>`;
                 }
 
                 movieTableData =
@@ -102,9 +101,11 @@
 
 
         function onDelete(id) {
+            console.log(id)
+
             $.ajax( {
                 type: "DELETE",
-                url: myUrl + "/" + id,
+                url: id,
                 dataType: "json",
             })
                 .done(function(msg) {
@@ -118,7 +119,7 @@
         function onDeactivate(id) {
             $.ajax( {
                 type: "PUT",
-                url: myUrl + "/" + id + "/deactivate",
+                url: id,
                 dataType: "json",
             })
                 .done(function(msg) {
@@ -133,7 +134,7 @@
             console.log("activate" + id)
             $.ajax( {
                 type: "PUT",
-                url: myUrl + "/" + id + "/activate",
+                url: id,
                 dataType: "json",
             })
                 .done(function(msg) {
@@ -254,6 +255,7 @@
             // document.getElementById("genre").value = ""
             document.getElementById("add").disabled = false
             document.getElementById("edit").disabled = true
+            document.getElementById("id").disabled = false
         }
 
     </script>
